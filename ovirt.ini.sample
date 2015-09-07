@@ -1,0 +1,22 @@
+[DEFAULT]
+ovirt_api_insecure = False
+ovirt_ca = /path/to/ca
+ovirt_password = password
+ovirt_username = admin@internal
+ovirt_url = https://ovirt.example.net/api
+
+ovirt_ip_regex = ^(\d+).(\d+).(\d+).(\d+)$
+ovirt_tag_control = mi-control
+ovirt_tag_worker = mi-worker
+
+ansible_ssh_port: 22
+ansible_ssh_private_key_file: ~/.ssh/id_rsa
+ansible_ssh_user: root
+
+[dc1]
+ovirt_url = https://ovirt-01.example.net/api
+ansible_ssh_user: someotheruser
+
+[dc2]
+ovirt_dc = local_datacenter
+consul_dc = dc1
