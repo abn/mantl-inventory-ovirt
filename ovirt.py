@@ -189,8 +189,9 @@ class OVirtInventory(object):
         }
 
         for dc in self.datacenters:
+            dc_group = 'dc={0:s}'.format(dc)
             # configure vars common to all hosts in a datacenter
-            data[dc] = {
+            data[dc_group] = {
                 'hosts': [],
                 'vars': {
                     cfg[0]: cfg[1](self.config.get(dc, cfg[0]))
@@ -198,7 +199,7 @@ class OVirtInventory(object):
                     if self.config.has_option(dc, cfg[0])
                     }
             }
-            data[dc]['vars']['dc'] = dc
+            data[dc_group]['vars']['dc'] = dc
 
             for role in self._ROLES.keys():
                 # populate groups for each role
@@ -223,12 +224,17 @@ class OVirtInventory(object):
 
                 # add hosts to both groups (role, datacenter)
                 data[group]['hosts'].extend(hosts)
-                data[dc]['hosts'].extend(hosts)
+                data[dc_group]['hosts'].extend(hosts)
 
                 for host in hosts:
                     # populate _meta
-                    data['_meta']['hostvars'][host] = hostvars
-
+                    data['_meta']['hostvars'][host] = {
+                        'role': role,
+                        'dc': dc,
+                        'consul_dc': consul_dc,
+                        'private_ipv4': host,
+                        'provider': 'ovirt'
+                    }
         return data
 
 
